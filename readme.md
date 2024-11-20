@@ -10,30 +10,69 @@ SlackのデータをNotebookLMにアップロードするための前処理を�
 
 # setup
 
+環境構築にはcondaを使用します。
+
 ```bash
 conda create -p ./.conda --file requirements.txt
-conda activate ./.conda
 git clone https://github.com/hfaran/slack2html
-python ./slack2html/slack2html.py -z <ZIPFILE_PATH> -o ./html
-python ./analyzer.py
+```
+
+Slackのデータをダウンロードするには、[slackdump](https://github.com/rusq/slackdump)を使用します。
+事前にインストールし、パスを通しておいてください。
+
+また、Slackのデータをダウンロードする際には、トークンとクッキーが必要です。
+どちらもブラウザのデベロッパーツールから取得できます。
+
+トークンの取得: ブラウザでSlackにログインし、デベロッパーツールを開いて以下のコマンドを実行します。
+
+```javascript
+JSON.parse(localStorage.localConfig_v2).teams[document.location.pathname.match(/^\/client\/(T[A-Z0-9]+)/)[1]].token
+```
+
+これにより、xoxcから始まるトークンが得られます。
+
+クッキーの取得: ストレージからdという名前のクッキーを取得します。これはxoxdから始まります。
+
+
+
+# Usage
+
+```bash
+conda activate ./.conda
+python backup.py
 ```
 
 上記を実行すると、`./txt`に47個のテキストファイルが作成されているはずです。これらのファイルをNotebookLMにアップロードしてください。
 
 # Note
 
-Windowsでは、`python ./slack2html/slack2html.py -z <ZIPFILE_PATH> -o ./html`の実行時に文字化けが発生します。
+（少なくとも）Windowsでは、`python ./slack2html/slack2html.py -z <ZIPFILE_PATH> -o ./html`の実行時に文字化け、またはUnicodeEncodeErrorが発生します。
 
-その場合は `.conda\Lib\site-packages\slackviewer\archive.py` 70行目
+その場合は `.conda\Lib\site-packages\slackviewer\archive.py` 69行目以降の
 
 
 ```python
+        # Extract zip
         with zipfile.ZipFile(filepath) as zip:
+            print("{} extracting to {}...".format(filepath, extracted_path))
+            for info in zip.infolist():
+                print(info.filename)
+                info.filename = info.filename.encode("cp437").decode("utf-8")
+                print(info.filename)
+                zip.extract(info,path=extracted_path)
 ```
 を
 
 ```python
+        # Extract zip
+        # with zipfile.ZipFile(filepath) as zip:
         with zipfile.ZipFile(filepath, metadata_encoding="utf-8") as zip:
+            print("{} extracting to {}...".format(filepath, extracted_path))
+            for info in zip.infolist():
+                print(info.filename)
+                # info.filename = info.filename.encode("cp437").decode("utf-8")
+                print(info.filename)
+                zip.extract(info,path=extracted_path)
 ```
 
 に変更してください。
