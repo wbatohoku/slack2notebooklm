@@ -4,3 +4,4 @@ slack2html
 txt
 *.zip
 *.png
+__pycache__
