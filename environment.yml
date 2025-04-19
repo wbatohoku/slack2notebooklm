@@ -1,0 +1,8 @@
+name: C:\Users\yamat\Projects\wba_wakate\export_viewer_tohoku\.conda
+channels:
+  - defaults
+dependencies:
+  - python==3.11.9
+  - tqdm
+  - matplotlib
+prefix: C:\Users\yamat\Projects\wba_wakate\export_viewer_tohoku\.conda
