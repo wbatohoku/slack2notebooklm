@@ -9,6 +9,8 @@ import tempfile
 import argparse
 from tqdm import tqdm
 
+from mod_text import collect_and_process_html_files, analyze_consolidate_and_clean_files
+
 def get_credentials():
     print("Slackトークンとクッキーを入力してください")
     token = input("SLACK_TOKEN (xoxcから始まる文字列): ")
@@ -43,9 +45,19 @@ def archive_with_timestamp(src_zip):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--merge-only",
+        "--skip-dump",
         action="store_true",
-        help="Skip slackdump and only merge existing backups",
+        help="Skip slackdump",
+    )
+    parser.add_argument(
+        "--skip-merge",
+        action="store_true",
+        help="Skip merging existing backups",
+    )
+    parser.add_argument(
+        "--skip-convert",
+        action="store_true",
+        help="Skip converting zip to HTML",
     )
     return parser.parse_args()
 
@@ -124,15 +136,6 @@ def run_slackdump(token, cookie):
     return archived_path
 
 
-def process_data(zip_path):
-    print("HTMLファイルに変換中...")
-    subprocess.run(
-        ["python", "./slack2html/slack2html.py", "-z", str(zip_path), "-o", "./html"],
-        check=True,
-    )
-
-    print("テキストファイルを生成中...")
-    subprocess.run(["python", "analyzer.py"], check=True)
 
 
 def main():
@@ -141,18 +144,37 @@ def main():
     Path("txt").mkdir(exist_ok=True)
 
     try:
-        if args.merge_only:
-            zip_path = get_backup_path()
-            if not zip_path:
-                print("マージ可能なバックアップが見つかりません")
-                return
-        else:
+        if not args.skip_dump:
             token, cookie = get_credentials()
             zip_path = run_slackdump(token, cookie)
 
-        merge_zip_files()
+        if args.skip_merge:
+            _zip_path = Path("./backups/slackdump_20240821_000000.zip")
 
-        process_data(zip_path)
+            if not Path("./slackdump.zip").exists():
+                zip_path = Path(shutil.copy2(_zip_path, "./slackdump.zip"))
+            else:
+                zip_path = Path("./slackdump.zip")
+        else:
+            zip_path = merge_zip_files()
+            if not zip_path:
+                print("マージするファイルが見つかりません")
+                sys.exit(1)
+
+        if not args.skip_convert:
+            print("HTMLファイルに変換中...")
+            subprocess.run(
+                ["python", "./slack2html/slack2html.py", "-z", str(zip_path), "-o", "./html"],
+                check=True,
+            )
+
+        print("テキストファイルを生成中...")
+                # メイン処理
+        folder_path = "./html"
+        output_folder = "./txt"
+
+        collect_and_process_html_files(folder_path, output_folder)
+        analyze_consolidate_and_clean_files(output_folder)
 
         print("\n処理が完了しました")
         print("./txtディレクトリに47個のテキストファイルが生成されています")
@@ -161,6 +183,9 @@ def main():
     except subprocess.CalledProcessError as e:
         print(f"エラーが発生しました: {e}")
         sys.exit(1)
+
+    # htmlディレクトリを削除
+    # shutil.rmtree("html")
 
 
 if __name__ == "__main__":
