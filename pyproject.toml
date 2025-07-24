@@ -1,0 +1,25 @@
+[project]
+name = "slack2notebooklm"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Yuki Minoh",email = "yukikaze.0511@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "tqdm (>=4.67.1,<5.0.0)",
+    "matplotlib (>=3.10.3,<4.0.0)",
+    "japanize-matplotlib (>=1.1.3,<2.0.0)",
+    "flask (>=3.1.1,<4.0.0)",
+    "jinja2 (>=3.1.6,<4.0.0)",
+    "requests (>=2.32.4,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = false
