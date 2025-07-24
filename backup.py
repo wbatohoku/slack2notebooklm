@@ -10,6 +10,7 @@ import argparse
 from tqdm import tqdm
 
 from mod_text import collect_and_process_html_files, analyze_consolidate_and_clean_files
+from dump2html import SlackJsonToHtml
 
 def get_credentials():
     print("Slackトークンとクッキーを入力してください")
@@ -58,6 +59,11 @@ def parse_args():
         "--skip-convert",
         action="store_true",
         help="Skip converting zip to HTML",
+    )
+    parser.add_argument(
+        "--skip-analyze",
+        action="store_true",
+        help="Skip analyzing and cleaning text files",
     )
     return parser.parse_args()
 
@@ -116,10 +122,15 @@ def run_slackdump(token, cookie):
     subprocess.run(
         [
             "slackdump",
-            "-export",
+            "export",
+            "-o",
             "slackdump.zip",
-            "-export-type",
+            "-type",
             "standard",
+            "-files=false",
+            "C069K1AS24T",  # _23 1
+            "C069YBU03JN",  # _23 2
+            "C07FD974XND",  # _24
         ],
         check=True,
     )
@@ -163,10 +174,18 @@ def main():
 
         if not args.skip_convert:
             print("HTMLファイルに変換中...")
-            subprocess.run(
-                ["python", "./slack2html/slack2html.py", "-z", str(zip_path), "-o", "./html"],
-                check=True,
-            )
+            # subprocess.run(
+            #     ["python", "dump2html.py", "-i", str(zip_path), "-o", "./html"],
+            #     check=True,
+            # )
+
+            # unzip
+            with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                zip_ref.extractall("./slackdump")
+
+            # dump folder nameをすべて取得
+            dump_folders = [f.name for f in Path("./slackdump").glob("*") if f.is_dir()]
+            SlackJsonToHtml(Path("./slackdump"), "./html", dump_folders)
 
         print("テキストファイルを生成中...")
                 # メイン処理
@@ -174,7 +193,9 @@ def main():
         output_folder = "./txt"
 
         collect_and_process_html_files(folder_path, output_folder)
-        analyze_consolidate_and_clean_files(output_folder)
+
+        if not args.skip_analyze:
+            analyze_consolidate_and_clean_files(output_folder)
 
         print("\n処理が完了しました")
         print("./txtディレクトリに47個のテキストファイルが生成されています")
