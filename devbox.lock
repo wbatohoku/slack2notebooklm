@@ -1,0 +1,179 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "github:NixOS/nixpkgs/nixpkgs-unstable": {
+      "last_modified": "2025-07-20T07:42:04Z",
+      "resolved": "github:NixOS/nixpkgs/7c688a0875df5a8c28a53fb55ae45e94eae0dddb?lastModified=1752997324&narHash=sha256-vtTM4oDke3SeDj%2B1ey6DjmzXdq8ZZSCLWSaApADDvIE%3D"
+    },
+    "poetry@latest": {
+      "last_modified": "2025-07-17T10:11:59Z",
+      "plugin_version": "0.0.4",
+      "resolved": "github:NixOS/nixpkgs/fa0ef8a6bb1651aa26c939aeb51b5f499e86b0ec#poetry",
+      "source": "devbox-search",
+      "version": "2.1.3",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/j9rcwm1asi28dqvky073zbs091ir23g8-python3.13-poetry-2.1.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/mdkvgr23ng37c6bgbpnxwhbq138ns2g8-python3.13-poetry-2.1.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/j9rcwm1asi28dqvky073zbs091ir23g8-python3.13-poetry-2.1.3"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/djkvbgm4x8dxicmdin3lifvlxpnvlmn7-python3.13-poetry-2.1.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/c8siygc9s572lpz1ys7wv20bkzi1rnqb-python3.13-poetry-2.1.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/djkvbgm4x8dxicmdin3lifvlxpnvlmn7-python3.13-poetry-2.1.3"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8nkc20fm430pildgc2iqnh2jsrz8nfxx-python3.13-poetry-2.1.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/ksjyrx51y1gf0spzciqkfbl707fi80fs-python3.13-poetry-2.1.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/8nkc20fm430pildgc2iqnh2jsrz8nfxx-python3.13-poetry-2.1.3"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/f20v6y7pndsvj6bqpck98kbr3ajj0wjc-python3.13-poetry-2.1.3",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/52rdwhvvxg0gav6d6hl64mmip5lqrh5d-python3.13-poetry-2.1.3-dist"
+            }
+          ],
+          "store_path": "/nix/store/f20v6y7pndsvj6bqpck98kbr3ajj0wjc-python3.13-poetry-2.1.3"
+        }
+      }
+    },
+    "python311@latest": {
+      "last_modified": "2025-07-13T22:45:35Z",
+      "plugin_version": "0.0.4",
+      "resolved": "github:NixOS/nixpkgs/a421ac6595024edcfbb1ef950a3712b89161c359#python311",
+      "source": "devbox-search",
+      "version": "3.11.13",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ycjsccacicqdghkaafhp2m120crj1kpf-python3-3.11.13",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ycjsccacicqdghkaafhp2m120crj1kpf-python3-3.11.13"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8wv78828icd6q6wj3bgsg0kvghjgnsjz-python3-3.11.13",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/y9rf7n4n7s2rkzysk0whw1chp6s3jx64-python3-3.11.13-debug"
+            }
+          ],
+          "store_path": "/nix/store/8wv78828icd6q6wj3bgsg0kvghjgnsjz-python3-3.11.13"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/fp45304m5h723ypsbsbx7a1x5mka8ini-python3-3.11.13",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/fp45304m5h723ypsbsbx7a1x5mka8ini-python3-3.11.13"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/blmbwskhrdv9y3vibxbwhw7602aikfww-python3-3.11.13",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/jpnzi866ylj7lxcxjngbmy2m2f670yqi-python3-3.11.13-debug"
+            }
+          ],
+          "store_path": "/nix/store/blmbwskhrdv9y3vibxbwhw7602aikfww-python3-3.11.13"
+        }
+      }
+    },
+    "slackdump@latest": {
+      "last_modified": "2025-07-13T22:45:35Z",
+      "resolved": "github:NixOS/nixpkgs/a421ac6595024edcfbb1ef950a3712b89161c359#slackdump",
+      "source": "devbox-search",
+      "version": "3.1.6",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jliqi4881k50qhhx7w3zr24801pcji8x-slackdump-3.1.6",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/jliqi4881k50qhhx7w3zr24801pcji8x-slackdump-3.1.6"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/qyf2zs73n8maawcnkr5j8p4jz0vf5a79-slackdump-3.1.6",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/qyf2zs73n8maawcnkr5j8p4jz0vf5a79-slackdump-3.1.6"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/45r548850p9f5r678nbsxd3dxgqn7hz2-slackdump-3.1.6",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/45r548850p9f5r678nbsxd3dxgqn7hz2-slackdump-3.1.6"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8pj9qa41a7rgk6msgm8bwgyk1zap1g01-slackdump-3.1.6",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/8pj9qa41a7rgk6msgm8bwgyk1zap1g01-slackdump-3.1.6"
+        }
+      }
+    }
+  }
+}
