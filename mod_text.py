@@ -14,6 +14,9 @@ channel_blacklist = [
 ]
 
 def clean_html_content(content):
+    content = re.sub(r"<head>(.|\n)*<title>(.*)<\/title>(.|\n)*<\/head>", r"\2", content)
+    content = content.replace("<br/>", "\n")
+
     # スクリプトを削除
     content = re.sub(r"<script>[\s\S]*</script>", "", content)
 
@@ -31,10 +34,12 @@ def clean_html_content(content):
     # 4つ以上連続する空白行を3つの空白行に置換
     content = re.sub("\n{4,}", "\n\n\n", content)
 
+    content = content.replace("&lt;", "<").replace("&gt;", ">")
+
     return content
 
 
-def collect_and_process_html_files(folder_path, output_folder="./txt", pattern="channel/*/*.html"):
+def collect_and_process_html_files(folder_path, output_folder="./txt", pattern="*.html"):
     folder = Path(folder_path)
     output_folder = Path(output_folder)
     output_folder.mkdir(parents=True, exist_ok=True)
@@ -42,10 +47,10 @@ def collect_and_process_html_files(folder_path, output_folder="./txt", pattern="
     processed_files = []
 
     for file_path in folder.rglob(pattern):
-        if any(channel in file_path.parent.name for channel in channel_blacklist):
+        if any(channel in file_path.name for channel in channel_blacklist):
             continue
 
-        new_filename = f"{file_path.parent.name}.txt"
+        new_filename = f"{file_path.name}.txt"
         new_file_path = output_folder / new_filename
 
         with file_path.open('r', encoding='utf-8') as f:
