@@ -14,7 +14,6 @@ Slack のデータを NotebookLM にアップロードするための前処理�
 
 ```bash
 conda create -p ./.conda --file requirements.txt
-git clone https://github.com/hfaran/slack2html
 ```
 
 Slack のデータをダウンロードするには、[slackdump](https://github.com/rusq/slackdump)を使用します。
@@ -120,36 +119,3 @@ python backup.py
 ```bash
 python backup.py --skip-merge
 ```
-
-# Note
-
-（少なくとも）Windows では、`python ./slack2html/slack2html.py -z <ZIPFILE_PATH> -o ./html`の実行時に文字化け、または UnicodeEncodeError が発生します。
-
-その場合は `.conda\Lib\site-packages\slackviewer\archive.py` 69 行目以降の
-
-```python
-        # Extract zip
-        with zipfile.ZipFile(filepath) as zip:
-            print("{} extracting to {}...".format(filepath, extracted_path))
-            for info in zip.infolist():
-                print(info.filename)
-                info.filename = info.filename.encode("cp437").decode("utf-8")
-                print(info.filename)
-                zip.extract(info,path=extracted_path)
-```
-
-を
-
-```python
-        # Extract zip
-        # with zipfile.ZipFile(filepath) as zip:
-        with zipfile.ZipFile(filepath, metadata_encoding="utf-8") as zip:
-            print("{} extracting to {}...".format(filepath, extracted_path))
-            for info in zip.infolist():
-                print(info.filename)
-                # info.filename = info.filename.encode("cp437").decode("utf-8")
-                print(info.filename)
-                zip.extract(info,path=extracted_path)
-```
-
-に変更してください。
