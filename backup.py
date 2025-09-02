@@ -28,15 +28,15 @@ def get_timestamp():
     return datetime.now().strftime("%Y%m%d_%H%M%S")
 
 
-def get_backup_path():
-    backup_dir = Path("backups")
-    backup_dir.mkdir(exist_ok=True)
+def get_backup_path(backup_id: str):
+    backup_dir = Path("backups") / backup_id
+    backup_dir.mkdir(parents=True, exist_ok=True)
     return backup_dir
 
 
-def archive_with_timestamp(src_zip):
+def archive_with_timestamp(src_zip, backup_id: str):
     timestamp = get_timestamp()
-    backup_path = get_backup_path()
+    backup_path = get_backup_path(backup_id)
     new_name = f"slackdump_{timestamp}.zip"
     dst_path = backup_path / new_name
     shutil.copy2(src_zip, dst_path)
@@ -65,11 +65,17 @@ def parse_args():
         action="store_true",
         help="Skip analyzing and cleaning text files",
     )
+    parser.add_argument(
+        "--backup-id",
+        "-b",
+        default="default",
+        help="Backup namespace ID (default: default)",
+    )
     return parser.parse_args()
 
 
-def merge_zip_files():
-    backup_path = get_backup_path()
+def merge_zip_files(backup_id: str):
+    backup_path = get_backup_path(backup_id)
     zip_files = sorted(backup_path.glob("slackdump_*.zip"), reverse=True)
 
     if not zip_files:
@@ -114,7 +120,7 @@ def merge_zip_files():
     return merged_zip
 
 
-def run_slackdump(token, cookie):
+def run_slackdump(token, cookie, backup_id: str):
     os.environ["SLACK_TOKEN"] = token
     os.environ["COOKIE"] = cookie
 
@@ -136,11 +142,11 @@ def run_slackdump(token, cookie):
     )
 
     # Archive the new dump
-    archived_path = archive_with_timestamp("slackdump.zip")
+    archived_path = archive_with_timestamp("slackdump.zip", backup_id)
     print(f"バックアップを保存しました: {archived_path}")
 
     # Merge all existing dumps
-    merged_path = merge_zip_files()
+    merged_path = merge_zip_files(backup_id)
     if merged_path:
         print(f"マージされたファイルを作成しました: {merged_path}")
         return merged_path
@@ -157,17 +163,17 @@ def main():
     try:
         if not args.skip_dump:
             token, cookie = get_credentials()
-            zip_path = run_slackdump(token, cookie)
+            zip_path = run_slackdump(token, cookie, args.backup_id)
 
         if args.skip_merge:
-            _zip_path = Path("./backups/slackdump_20240821_000000.zip")
+            _zip_path = Path(f"./backups/{args.backup_id}/slackdump_20240821_000000.zip")
 
             if not Path("./slackdump.zip").exists():
                 zip_path = Path(shutil.copy2(_zip_path, "./slackdump.zip"))
             else:
                 zip_path = Path("./slackdump.zip")
         else:
-            zip_path = merge_zip_files()
+            zip_path = merge_zip_files(args.backup_id)
             if not zip_path:
                 print("マージするファイルが見つかりません")
                 sys.exit(1)
